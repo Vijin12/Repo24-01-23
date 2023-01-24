@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "bd786fc4-a9ef-42fd-8dbb-a4527b5ffc0b",
+		"name": "TigerViewAPIAutomation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20561777"
+	},
+	"item": [
+		{
+			"name": "AdminLogin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" var jsonData = pm.response.json();\r",
+							" pm.collectionVariables.set(\"adminToken\", jsonData.token);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify the Admin Login by status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"Admin@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DomainUrl}}/Authenticate/login",
+					"host": [
+						"{{DomainUrl}}"
+					],
+					"path": [
+						"Authenticate",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RegisterUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify Patient Registration request with status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify accessLink available for the user\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.accessLink).not.null;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{adminToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"{{UserName}}\",\r\n  \"patientId\": \"{{Patient_Id}}\",\r\n  \"patientName\": \"{{patientName}}\",\r\n  \"email\": \"{{Email}}\",\r\n  \"password\": \"{{Password}}\",  \r\n  \"expiryDate\": \"{{ExpiryDate}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DomainUrl}}/Authenticate/register-user",
+					"host": [
+						"{{DomainUrl}}"
+					],
+					"path": [
+						"Authenticate",
+						"register-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register_Previleged_User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify Privilaged user registration with status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{adminToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"Admin2\",\r\n  \"password\": \"Admin2@123\",\r\n  \"fullName\": \"Admin2\",\r\n  \"email\": \"Admin2@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DomainUrl}}/Authenticate/register-admin",
+					"host": [
+						"{{DomainUrl}}"
+					],
+					"path": [
+						"Authenticate",
+						"register-admin"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "DomainUrl",
+			"value": "http://dev.api.tigerview.teamta.net",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFkbWluIiwiRW1haWwiOiJhZG1pbkB0aWdlcnZpZXdjbG91ZDguY29tIiwianRpIjoiMTMwNTI5NGEtMDFkNi00ZThjLTgxZDAtNjg2NGY4ZGJiODM2IiwiRnVsbE5hbWUiOiJhZG1pbiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImFkbWluIiwiZXhwIjoxNjc0NTY3MDg3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyMDAifQ.dbnS5OslLJ9IguiPIjInHxRSjJmBmgwACN0FIPayDO0"
+		},
+		{
+			"key": "UserName",
+			"value": "User1",
+			"type": "string"
+		},
+		{
+			"key": "Patient_Id",
+			"value": "637952980544240100",
+			"type": "string"
+		},
+		{
+			"key": "patientName",
+			"value": "User",
+			"type": "string"
+		},
+		{
+			"key": "Email",
+			"value": "User@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "Password",
+			"value": "User@1234",
+			"type": "string"
+		},
+		{
+			"key": "ExpiryDate",
+			"value": "2023-01-26T12:30:00.000Z",
+			"type": "string"
+		},
+		{
+			"key": "NewPassword",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
