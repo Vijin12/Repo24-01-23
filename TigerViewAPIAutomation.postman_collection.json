@@ -13,12 +13,17 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							" var jsonData = pm.response.json();\r",
-							" pm.collectionVariables.set(\"adminToken\", jsonData.token);\r",
+							"//  var jsonData = pm.response.json();\r",
+							"//  pm.collectionVariables.set(\"adminToken\", jsonData.token);\r",
 							"\r",
 							"\r",
 							"pm.test(\"Verify the Admin Login by status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Encrpted Token is available\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.token).not.null;\r",
 							"});\r",
 							""
 						],
